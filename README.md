@@ -31,10 +31,10 @@ npm run dev
 Place actual images into public/ and keep these markdown links as-is. The app will load them from /images/... at runtime.
 
 - Main Interface  
-  ![TokenStudio Main Interface](public\images\main-interface.png)
+  ![TokenStudio Main Interface](/images/main-interface.png)
   
 - Visualization  
-  ![Token Visualization](public\images\token-visualization.png)
+  ![Token Visualization](/images/token-visualization.png)
   
 ### Basic Text Tokenization
 
