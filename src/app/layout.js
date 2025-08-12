@@ -3,6 +3,13 @@ import './globals.css';
 
 const figtree = Figtree({ subsets: ['latin'] });
 
+export const viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
+  ],
+};
+
 export const metadata = {
   title: 'Token Studio',
   description:
@@ -38,11 +45,6 @@ export const metadata = {
       'A tiktoken-style tokenizer built with Next.js 15 and JavaScript',
     images: ['/og-image.png'],
   },
-  // Optional theme colors
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
-  ],
   metadataBase: new URL('https://tokenstudio-js.vercel.app/'),
 };
 
