@@ -1,12 +1,50 @@
+/**
+ * ╭─────────────────────────────────────────────────────────────────╮
+ * │                    🎨 Token Visualizer Component                │
+ * │                                                                 │
+ * │  Beautiful interactive visualization that transforms text       │
+ * │  into colorful, hoverable token elements with detailed         │
+ * │  analytics and insights.                                        │
+ * ╰─────────────────────────────────────────────────────────────────╯
+ */
+
 'use client';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, Info } from 'lucide-react';
 
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ * 🌈 COMPONENT: TokenVisualizer
+ * ═══════════════════════════════════════════════════════════════════
+ *
+ * Purpose: Creates an interactive, color-coded visualization of how
+ *          text is broken down into tokens by AI models
+ *
+ * Features:
+ *   • Color-coded token display with hover details
+ *   • Special character visualization (spaces, newlines, tabs)
+ *   • Comprehensive statistics dashboard
+ *   • Detailed token analysis table
+ *   • Cost estimation and efficiency metrics
+ */
 export function TokenVisualizer({ text, tokens, tokenizer, modelName }) {
+  // ┌─────────────────────────────────────────────────────────────┐
+  // │ 🛡️ Early Return Guards                                     │
+  // └─────────────────────────────────────────────────────────────┘
   if (!tokenizer || !tokens.length) return null;
 
+  /**
+   * ╔═══════════════════════════════════════════════════════════════╗
+   * ║ 🎨 UTILITY FUNCTION: getTokenColor                           ║
+   * ╚═══════════════════════════════════════════════════════════════╝
+   *
+   * Generates beautiful, distinct colors for token visualization:
+   * • Cycles through a carefully chosen color palette
+   * • Ensures good contrast and readability
+   * • Provides hover effects for interactivity
+   */
   const getTokenColor = (index) => {
     const colors = [
       'bg-red-100 text-red-800 border-red-200 hover:bg-red-200',
@@ -23,7 +61,19 @@ export function TokenVisualizer({ text, tokens, tokenizer, modelName }) {
     return colors[index % colors.length];
   };
 
+  /**
+   * ╔═══════════════════════════════════════════════════════════════╗
+   * ║ 🎯 CORE FUNCTION: renderTokenBreakdown                       ║
+   * ╚═══════════════════════════════════════════════════════════════╝
+   *
+   * Creates the main interactive token visualization:
+   * • Converts token IDs to readable text
+   * • Makes invisible characters visible (spaces, newlines, tabs)
+   * • Adds hover tooltips with token details
+   * • Applies beautiful color coding and animations
+   */
   const renderTokenBreakdown = () => {
+    // 🔄 Convert token IDs to actual text representations
     const tokenTexts = tokens.map((tokenId) => tokenizer.getTokenText(tokenId));
 
     return tokenTexts.map((tokenText, index) => {
@@ -36,18 +86,25 @@ export function TokenVisualizer({ text, tokens, tokenizer, modelName }) {
             index,
           )}`}
           title={`Token ${index + 1}: "${tokenText}" (ID: ${tokenId})`}>
+          {/* 👁️ Make special characters visible for better understanding */}
           {tokenText.replace(/\n/g, '↵').replace(/\t/g, '→').replace(/ /g, '␣')}
         </span>
       );
     });
   };
 
+  // ┌─────────────────────────────────────────────────────────────┐
+  // │ 🎨 Main Component Render                                   │
+  // └─────────────────────────────────────────────────────────────┘
+
   return (
     <Card className='border-0 shadow-lg bg-white/80 backdrop-blur-sm'>
       <CardHeader>
         <CardTitle className='flex items-center gap-3'>
           <Eye className='w-5 h-5 text-blue-600' />
-          <span>Token Visualization</span>
+          <span className='bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'>
+            Token Visualization
+          </span>
           <Badge
             variant='outline'
             className='gap-1'>
@@ -56,11 +113,14 @@ export function TokenVisualizer({ text, tokens, tokenizer, modelName }) {
           </Badge>
         </CardTitle>
       </CardHeader>
+
       <CardContent className='space-y-6'>
-        {/* Interactive Token Breakdown */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* 🎨 Interactive Token Breakdown Display                     */}
+        {/* ═══════════════════════════════════════════════════════════ */}
         <div>
           <label className='text-base font-semibold mb-4 flex items-center gap-2'>
-            Interactive Token Breakdown
+            🎯 Interactive Token Breakdown
           </label>
           <div className='p-6 border-2 border-dashed border-gray-300 rounded-xl bg-gradient-to-br from-gray-50 to-white min-h-24'>
             <div className='flex flex-wrap leading-relaxed'>
@@ -73,47 +133,63 @@ export function TokenVisualizer({ text, tokens, tokenizer, modelName }) {
           </p>
         </div>
 
-        {/* Enhanced Statistics */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* 📊 Enhanced Statistics Dashboard                           */}
+        {/* ═══════════════════════════════════════════════════════════ */}
         <div className='grid grid-cols-2 md:grid-cols-5 gap-4'>
-          <div className='text-center p-3 bg-blue-50 rounded-lg'>
+          {/* 📝 Character Count */}
+          <div className='text-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors'>
             <div className='text-2xl font-bold text-blue-600'>
               {text.length}
             </div>
-            <div className='text-sm text-blue-800'>Characters</div>
+            <div className='text-sm text-blue-800 font-medium'>Characters</div>
           </div>
-          <div className='text-center p-3 bg-green-50 rounded-lg'>
+
+          {/* 🎯 Token Count */}
+          <div className='text-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors'>
             <div className='text-2xl font-bold text-green-600'>
               {tokens.length}
             </div>
-            <div className='text-sm text-green-800'>Tokens</div>
+            <div className='text-sm text-green-800 font-medium'>Tokens</div>
           </div>
-          <div className='text-center p-3 bg-purple-50 rounded-lg'>
+
+          {/* ⚡ Efficiency Ratio */}
+          <div className='text-center p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors'>
             <div className='text-2xl font-bold text-purple-600'>
               {(tokens.length / text.length).toFixed(2)}
             </div>
-            <div className='text-sm text-purple-800'>Tokens/Char</div>
+            <div className='text-sm text-purple-800 font-medium'>
+              Tokens/Char
+            </div>
           </div>
-          <div className='text-center p-3 bg-orange-50 rounded-lg'>
+
+          {/* 🔄 Unique Tokens */}
+          <div className='text-center p-3 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors'>
             <div className='text-2xl font-bold text-orange-600'>
               {new Set(tokens).size}
             </div>
-            <div className='text-sm text-orange-800'>Unique</div>
+            <div className='text-sm text-orange-800 font-medium'>Unique</div>
           </div>
-          <div className='text-center p-3 bg-red-50 rounded-lg'>
+
+          {/* 💰 Cost Estimation */}
+          <div className='text-center p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors'>
             <div className='text-2xl font-bold text-red-600'>
               ${((tokens.length * 0.0015) / 1000).toFixed(4)}
             </div>
-            <div className='text-sm text-red-800'>Est. Cost</div>
+            <div className='text-sm text-red-800 font-medium'>Est. Cost</div>
           </div>
         </div>
 
-        {/* Token Details Table */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* 📋 Detailed Token Analysis Table                           */}
+        {/* ═══════════════════════════════════════════════════════════ */}
         <div>
           <label className='text-base font-semibold mb-4 flex items-center gap-2'>
-            Token Analysis
+            🔍 Token Analysis
           </label>
           <div className='max-h-64 overflow-y-auto border-2 border-gray-200 rounded-xl'>
             <table className='w-full text-sm'>
+              {/* 📋 Table Header */}
               <thead className='bg-gradient-to-r from-gray-100 to-gray-50 sticky top-0'>
                 <tr>
                   <th className='px-4 py-3 text-left font-semibold text-gray-700'>
@@ -130,6 +206,8 @@ export function TokenVisualizer({ text, tokens, tokenizer, modelName }) {
                   </th>
                 </tr>
               </thead>
+
+              {/* 📊 Table Body with Token Details */}
               <tbody>
                 {tokens.map((tokenId, index) => {
                   const tokenText = tokenizer.getTokenText(tokenId);
@@ -140,17 +218,24 @@ export function TokenVisualizer({ text, tokens, tokenizer, modelName }) {
                       className={`border-t ${
                         index % 2 === 0 ? 'bg-gray-50/50' : 'bg-white'
                       } hover:bg-blue-50/50 transition-colors`}>
+                      {/* 🔢 Token Index */}
                       <td className='px-4 py-3 font-mono text-gray-600'>
                         {index}
                       </td>
+
+                      {/* 🎯 Token ID */}
                       <td className='px-4 py-3 font-mono text-blue-600 font-medium'>
                         {tokenId}
                       </td>
+
+                      {/* 📝 Token Text (escaped for visibility) */}
                       <td className='px-4 py-3 font-mono text-green-700'>
                         &quot;
                         {tokenText.replace(/\n/g, '\\n').replace(/\t/g, '\\t')}
                         &quot;
                       </td>
+
+                      {/* 📏 Token Length */}
                       <td className='px-4 py-3 font-mono text-gray-500'>
                         {tokenText.length}
                       </td>
@@ -161,8 +246,12 @@ export function TokenVisualizer({ text, tokens, tokenizer, modelName }) {
             </table>
           </div>
         </div>
-        <p className='text-xs text-gray-500'>
-          *Estimated cost based on GPT-3.5-turbo pricing ($0.0015/1K tokens)
+
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* 💡 Cost Estimation Disclaimer                              */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        <p className='text-xs text-gray-500 italic'>
+          * Estimated cost based on GPT-3.5-turbo pricing ($0.0015/1K tokens)
         </p>
       </CardContent>
     </Card>
