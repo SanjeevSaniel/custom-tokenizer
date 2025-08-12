@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Bot, Zap, Code, Sparkles } from 'lucide-react';
+import Image from 'next/image';
 
 export function Header({ isLoading, selectedModel, stats }) {
   const [mounted, setMounted] = useState(false);
@@ -30,8 +31,14 @@ export function Header({ isLoading, selectedModel, stats }) {
             className={`flex items-center gap-3 transition-all duration-600 ${
               mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
             }`}>
-            <div className='p-2.5 bg-white/80 backdrop-blur-sm rounded-lg border border-slate-200/80 shadow-sm'>
-              <Bot className='w-5 h-5 text-slate-600' />
+            <div className='p-1 bg-white/80 backdrop-blur-sm rounded-lg border border-slate-200/80 shadow-sm'>
+              <Image
+                src='/Logo.png'
+                alt='Token Studio Logo'
+                width={50}
+                height={50}
+                className='w-10 h-10'
+              />
             </div>
             <div>
               <h1 className='text-2xl font-bold text-slate-800 leading-tight'>
