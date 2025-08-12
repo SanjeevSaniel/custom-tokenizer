@@ -1,3 +1,13 @@
+/**
+ * ╭─────────────────────────────────────────────────────────────────╮
+ * │                  🧠 Tokenizer Interface Component               │
+ * │                                                                 │
+ * │  The main dashboard for AI tokenization analysis featuring     │
+ * │  real-time encoding, model comparison, and beautiful           │
+ * │  visualizations of how text becomes tokens.                    │
+ * ╰─────────────────────────────────────────────────────────────────╯
+ */
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -28,7 +38,25 @@ import {
 } from 'lucide-react';
 import { Header } from './header';
 
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ * 🎛️ COMPONENT: TokenizerInterface
+ * ═══════════════════════════════════════════════════════════════════
+ *
+ * Purpose: Main interface for tokenization analysis and visualization
+ *
+ * Key Features:
+ *   • Real-time text-to-token encoding/decoding
+ *   • Multi-model support with dynamic switching
+ *   • Interactive token visualization
+ *   • Comprehensive statistics dashboard
+ *   • Sample text library integration
+ *   • Responsive design with beautiful animations
+ */
 export function TokenizerInterface() {
+  // ┌─────────────────────────────────────────────────────────────┐
+  // │ 🎯 Core State Management                                   │
+  // └─────────────────────────────────────────────────────────────┘
   const [tokenizer, setTokenizer] = useState(null);
   const [inputText, setInputText] = useState('');
   const [encodedTokens, setEncodedTokens] = useState([]);
@@ -38,35 +66,60 @@ export function TokenizerInterface() {
   const [isLoading, setIsLoading] = useState(true);
   const [stats, setStats] = useState({});
 
+  // ┌─────────────────────────────────────────────────────────────┐
+  // │ 🔧 Technical Infrastructure                                │
+  // └─────────────────────────────────────────────────────────────┘
   const tokenizerRef = useRef(null);
   const isInitializing = useRef(false);
 
-  // ... (keep all existing methods unchanged)
+  /**
+   * ╔═══════════════════════════════════════════════════════════════╗
+   * ║ 🚀 CORE FUNCTION: initializeTokenizer                        ║
+   * ╚═══════════════════════════════════════════════════════════════╝
+   *
+   * Handles the complex process of tokenizer initialization:
+   * • Prevents multiple simultaneous initializations
+   * • Cleans up previous tokenizer instances
+   * • Provides smooth loading transitions
+   * • Handles initialization errors gracefully
+   */
   const initializeTokenizer = async (modelName) => {
+    // 🚫 Prevent concurrent initialization attempts
     if (isInitializing.current) return;
 
     isInitializing.current = true;
     setIsLoading(true);
 
     try {
+      // 🧹 Clean up existing tokenizer to prevent memory leaks
       if (tokenizerRef.current) {
         tokenizerRef.current.free();
         tokenizerRef.current = null;
       }
 
+      // ⏳ Small delay for smooth UI transitions
       await new Promise((resolve) => setTimeout(resolve, 300));
 
+      // 🔧 Create and configure new tokenizer instance
       const newTokenizer = new TiktokenWrapper(modelName);
       tokenizerRef.current = newTokenizer;
       setTokenizer(newTokenizer);
     } catch (error) {
-      console.error('Failed to initialize tokenizer:', error);
+      console.error('❌ Failed to initialize tokenizer:', error);
     } finally {
       setIsLoading(false);
       isInitializing.current = false;
     }
   };
 
+  // ┌─────────────────────────────────────────────────────────────┐
+  // │ ⚡ Effect Hooks                                             │
+  // └─────────────────────────────────────────────────────────────┘
+
+  /**
+   * 🔄 Initialize tokenizer when model changes
+   * Also handles cleanup on component unmount
+   */
   useEffect(() => {
     initializeTokenizer(selectedModel);
 
@@ -78,10 +131,21 @@ export function TokenizerInterface() {
     };
   }, [selectedModel]);
 
+  /**
+   * ╔═══════════════════════════════════════════════════════════════╗
+   * ║ 📊 UTILITY FUNCTION: calculateStats                          ║
+   * ╚═══════════════════════════════════════════════════════════════╝
+   *
+   * Generates comprehensive analytics for tokenization results:
+   * • Character/token counts and ratios
+   * • Unique token analysis
+   * • Compression efficiency metrics
+   * • Cost estimation for API usage
+   */
   const calculateStats = (text, tokens) => {
     const uniqueTokens = new Set(tokens).size;
     const compressionRatio = tokens.length / text.length;
-    const estimatedCost = (tokens.length * 0.03) / 1000;
+    const estimatedCost = (tokens.length * 0.03) / 1000; // GPT-3.5 pricing
 
     return {
       characters: text.length,
@@ -92,8 +156,20 @@ export function TokenizerInterface() {
     };
   };
 
+  /**
+   * ╔═══════════════════════════════════════════════════════════════╗
+   * ║ 🎯 CORE FUNCTION: handleEncode                               ║
+   * ╚═══════════════════════════════════════════════════════════════╝
+   *
+   * The heart of the tokenization process:
+   * • Encodes text into token arrays
+   * • Decodes tokens back to verify accuracy
+   * • Calculates comprehensive statistics
+   * • Handles edge cases and errors
+   */
   const handleEncode = (text) => {
     if (!tokenizer || !text.trim()) {
+      // 🧹 Clear results for empty input
       setEncodedTokens([]);
       setDecodedText('');
       setStats({});
@@ -101,22 +177,32 @@ export function TokenizerInterface() {
     }
 
     try {
+      // 🔢 Encode text to token array
       const tokens = tokenizer.encode(text);
       setEncodedTokens(tokens);
 
+      // 🔄 Decode tokens back to text for verification
       const decoded = tokenizer.decode(tokens);
       setDecodedText(decoded);
 
+      // 📊 Calculate and update statistics
       const newStats = calculateStats(text, tokens);
       setStats(newStats);
     } catch (error) {
-      console.error('Encoding failed:', error);
+      console.error('❌ Encoding failed:', error);
       setEncodedTokens([]);
       setDecodedText('');
       setStats({});
     }
   };
 
+  // ┌─────────────────────────────────────────────────────────────┐
+  // │ 🎭 Event Handlers                                          │
+  // └─────────────────────────────────────────────────────────────┘
+
+  /**
+   * 📝 Sample text selection handler
+   */
   const handleSampleSelect = (sampleKey) => {
     setSelectedSample(sampleKey);
     const sampleText = SAMPLE_TEXTS[sampleKey] || '';
@@ -124,9 +210,13 @@ export function TokenizerInterface() {
     handleEncode(sampleText);
   };
 
+  /**
+   * 🔄 Model change handler with state cleanup
+   */
   const handleModelChange = (newModel) => {
     if (newModel !== selectedModel) {
       setSelectedModel(newModel);
+      // 🧹 Reset all state when switching models
       setInputText('');
       setEncodedTokens([]);
       setDecodedText('');
@@ -135,6 +225,9 @@ export function TokenizerInterface() {
     }
   };
 
+  /**
+   * 🗑️ Clear all data handler
+   */
   const handleClear = () => {
     setInputText('');
     setSelectedSample('');
@@ -143,12 +236,22 @@ export function TokenizerInterface() {
     setStats({});
   };
 
+  /**
+   * 📋 Copy to clipboard utility
+   */
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
   };
 
+  // ┌─────────────────────────────────────────────────────────────┐
+  // │ 🎨 Component Render                                        │
+  // └─────────────────────────────────────────────────────────────┘
+
   return (
     <div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30'>
+      {/* ═══════════════════════════════════════════════════════════ */}
+      {/* 🎯 Header Section with Global Stats                        */}
+      {/* ═══════════════════════════════════════════════════════════ */}
       <Header
         isLoading={isLoading}
         selectedModel={selectedModel}
@@ -156,9 +259,11 @@ export function TokenizerInterface() {
       />
 
       <div className='container mx-auto px-6 py-6 -mt-4 relative z-20'>
-        {/* Top Row: Controls and Input - Better responsive layout */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* 🎛️ Top Row: Controls and Input                             */}
+        {/* ═══════════════════════════════════════════════════════════ */}
         <div className='grid grid-cols-1 xl:grid-cols-4 gap-4 mb-6'>
-          {/* Controls - Spans 1 column on XL, full width on smaller screens */}
+          {/* 🔧 Controls Panel */}
           <Card className='xl:col-span-1 border-0 shadow-md bg-white/90 backdrop-blur-sm'>
             <CardHeader className='pb-3'>
               <CardTitle className='text-sm flex items-center gap-2'>
@@ -167,6 +272,7 @@ export function TokenizerInterface() {
               </CardTitle>
             </CardHeader>
             <CardContent className='pt-0 space-y-3'>
+              {/* 🤖 Model Selection */}
               <div>
                 <label className='text-xs font-medium text-gray-600 mb-1 block'>
                   Model
@@ -191,6 +297,7 @@ export function TokenizerInterface() {
                 </Select>
               </div>
 
+              {/* 📖 Sample Text Selection */}
               <div>
                 <label className='text-xs font-medium text-gray-600 mb-1 block'>
                   Sample
@@ -227,7 +334,7 @@ export function TokenizerInterface() {
             </CardContent>
           </Card>
 
-          {/* Input - Spans 3 columns on XL, full width on smaller screens */}
+          {/* ✏️ Text Input Area */}
           <Card className='xl:col-span-3 border-0 shadow-md bg-white/90 backdrop-blur-sm'>
             <CardHeader className='pb-3'>
               <CardTitle className='text-sm flex items-center gap-2'>
@@ -250,7 +357,9 @@ export function TokenizerInterface() {
           </Card>
         </div>
 
-        {/* Stats Row - Better organized metrics */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* 📊 Statistics Dashboard                                    */}
+        {/* ═══════════════════════════════════════════════════════════ */}
         {!isLoading && inputText.trim() && encodedTokens.length > 0 && (
           <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6'>
             {[
@@ -310,10 +419,12 @@ export function TokenizerInterface() {
           </div>
         )}
 
-        {/* Results Row - Improved responsive grid */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* 🔍 Results Display Section                                 */}
+        {/* ═══════════════════════════════════════════════════════════ */}
         {!isLoading && inputText.trim() && encodedTokens.length > 0 && (
           <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6'>
-            {/* Encoding - 2 columns on large screens */}
+            {/* 🔢 Token Encoding Display */}
             <Card className='lg:col-span-2 border-0 shadow-md bg-white/90 backdrop-blur-sm'>
               <CardHeader className='pb-3'>
                 <CardTitle className='text-base flex items-center justify-between'>
@@ -330,7 +441,8 @@ export function TokenizerInterface() {
                     onClick={() => copyToClipboard(encodedTokens.join(', '))}
                     variant='ghost'
                     size='sm'
-                    className='h-7 px-2'>
+                    className='h-7 px-2'
+                    title='Copy token array'>
                     <Copy className='w-3 h-3' />
                   </Button>
                 </CardTitle>
@@ -344,7 +456,7 @@ export function TokenizerInterface() {
               </CardContent>
             </Card>
 
-            {/* Decoding - 1 column on large screens */}
+            {/* ✅ Decoding Verification */}
             <Card className='lg:col-span-1 border-0 shadow-md bg-white/90 backdrop-blur-sm'>
               <CardHeader className='pb-3'>
                 <CardTitle className='text-base'>
@@ -373,7 +485,9 @@ export function TokenizerInterface() {
           </div>
         )}
 
-        {/* Token Visualization - Full width */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* 🎨 Interactive Token Visualization                         */}
+        {/* ═══════════════════════════════════════════════════════════ */}
         {!isLoading && encodedTokens.length > 0 && tokenizer && (
           <TokenVisualizer
             text={inputText}
@@ -383,7 +497,9 @@ export function TokenizerInterface() {
           />
         )}
 
-        {/* Loading State */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* ⏳ Loading State                                           */}
+        {/* ═══════════════════════════════════════════════════════════ */}
         {isLoading && (
           <Card className='border-0 shadow-md bg-white/90 backdrop-blur-sm'>
             <CardContent className='p-8 text-center'>
