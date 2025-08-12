@@ -9,6 +9,7 @@ export const metadata = {
     'A tiktoken-style tokenizer built with Next.js 15 and JavaScript',
   // Favicon and app icons
   icons: {
+    favicon: [{ url: '/favicon.ico', sizes: 'any' }],
     icon: [{ url: '/Logo.png', type: 'image/png' }],
   },
   // Open Graph (used by WhatsApp, Facebook, etc.)
