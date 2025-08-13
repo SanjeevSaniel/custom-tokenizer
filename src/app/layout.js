@@ -12,8 +12,7 @@ export const viewport = {
 
 export const metadata = {
   title: 'Token Studio',
-  description:
-    'A tiktoken-style tokenizer built with Next.js 15 and JavaScript',
+  description: 'Real-time GPT tokenizer with cost analysis and visualization',
   // Favicon and app icons
   icons: {
     favicon: [{ url: '/favicon.ico', sizes: 'any' }],
@@ -22,13 +21,12 @@ export const metadata = {
   // Open Graph (used by WhatsApp, Facebook, etc.)
   openGraph: {
     title: 'Token Studio',
-    description:
-      'A tiktoken-style tokenizer built with Next.js 15 and JavaScript',
+    description: 'Real-time GPT tokenizer with cost analysis and visualization',
     url: 'https://tokenstudio-js.vercel.app/',
     siteName: 'Token Studio',
     images: [
       {
-        url: '/Logo.png',
+        url: '/images/main-interface.png',
         width: 1200,
         height: 630,
         alt: 'Token Studio preview',
@@ -41,9 +39,8 @@ export const metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Token Studio',
-    description:
-      'A tiktoken-style tokenizer built with Next.js 15 and JavaScript',
-    images: ['/og-image.png'],
+    description: 'Real-time GPT tokenizer with cost analysis and visualization',
+    images: ['/images/main-interface.png'],
   },
   metadataBase: new URL('https://tokenstudio-js.vercel.app/'),
 };
